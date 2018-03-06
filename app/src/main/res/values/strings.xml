@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">RW_checker</string>
+    <string name="title_activity_sample">sample</string>
+    <string name="read_sorce">Источник</string>
+    <string name="my_shops">Загрузить Мои магазины</string>
+    <string name="Parent"></string>
+</resources>

@@ -1,0 +1,26 @@
+{
+    "logs": [
+        {
+            "outputFile": "C:\\Users\\yur\\Develop\\Android\\K&B\\RW_checker\\fileChooser\\build\\intermediates\\incremental\\mergeDebugResources\\merged.dir\\values\\values.xml",
+            "map": [
+                {
+                    "source": "C:\\Users\\yur\\Develop\\Android\\K&B\\RW_checker\\fileChooser\\src\\main\\res\\values\\stringsFileChooser.xml",
+                    "from": {
+                        "startLines": "3,7,6,4,2,5",
+                        "startColumns": "4,4,4,4,4,4",
+                        "startOffsets": "115,315,268,165,55,207",
+                        "endColumns": "49,50,46,41,59,60",
+                        "endOffsets": "160,361,310,202,110,263"
+                    },
+                    "to": {
+                        "startLines": "2,3,4,5,6,7",
+                        "startColumns": "4,4,4,4,4,4",
+                        "startOffsets": "55,105,156,203,245,305",
+                        "endColumns": "49,50,46,41,59,60",
+                        "endOffsets": "100,151,198,240,300,361"
+                    }
+                }
+            ]
+        }
+    ]
+}
