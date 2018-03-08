@@ -22,9 +22,9 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
     ListView lsMyShopList, lsMailList, lsResult;
     Button btnEnterData, btnProc, btnClear, btnSave;
-    ArrayList<Integer> processedMyShopList= new ArrayList<>();
-    ArrayList<Integer> processedMailList = new ArrayList<>();
-    ArrayList<Integer> lResult = new ArrayList<>();
+    ArrayList processedMyShopList= new ArrayList<>();
+    ArrayList processedMailList = new ArrayList<>();
+    ArrayList lResult = new ArrayList<>();
     SharedPreferences sPref;
     private final String TAG_shopList = "myShops";
     private final String TAG_mailList = "mailList";
@@ -41,12 +41,12 @@ public class MainActivity extends Activity implements View.OnClickListener {
         btnProc = findViewById(R.id.btnProcessData);
         btnClear = findViewById(R.id.btnClearAll);
         btnSave = findViewById(R.id.btnSave);
-//        if (loadOnStart() != null && !loadOnStart().isEmpty()) {
-//            checkSavedData(loadOnStart());
-//        }
+        if (loadOnStart() != null && !loadOnStart().isEmpty()) {
+            checkSavedData(loadOnStart());
+        }
 
 ////////////////TMP Debug
-        List<Integer> tmpMyShops = new ArrayList<Integer>( Arrays.asList(575,824,875,1144,1193,1362,1363,1622,1753,1837,2058,2302,2365,2417,2541,2542,4281,1838,4826));
+ //       List<Integer> tmpMyShops = new ArrayList<Integer>( Arrays.asList(575,824,875,1144,1193,1362,1363,1622,1753,1837,2058,2302,2365,2417,2541,2542,4281,1838,4826));
 //        List<Integer> tmpMailList = new ArrayList<Integer>(Arrays.asList(575,8, 19, 20, 23, 24, 26, 37, 39, 41, 49, 51, 58, 61, 65, 79, 80, 81, 82, 88, 89, 95, 101, 107, 111, 117, 118, 131, 133, 143, 148, 151, 157, 159, 174, 175, 187, 190, 191, 198, 203, 204, 205, 222, 224, 227, 241, 242, 250, 258, 262, 272, 276, 277, 282, 284, 287, 293, 296, 297, 302, 304, 312, 313, 318, 321, 323, 325, 332, 335, 349, 352, 353, 354, 355, 357, 359, 363, 364, 370, 373, 377, 378, 381, 383, 387, 410, 412, 418, 419, 439, 443, 449, 451, 452, 464, 465, 484, 487, 495, 502, 504, 505, 506, 511, 523, 538, 547, 548, 553, 555, 563, 576, 577, 578, 590, 592, 593, 597, 599, 600, 606, 617, 620, 621, 629, 638, 639, 640, 641, 646, 651, 652, 653, 655, 658, 662, 668, 671, 683, 684, 688, 689, 690, 692, 695, 696, 698, 702,824));
 //        processedMyShopList = (ArrayList<Integer>) tmpMyShops;
 //        processedMailList = (ArrayList<Integer>) tmpMailList;
@@ -116,16 +116,18 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
     @Override
     protected void onStop() {
-        super.onStop();
         saveOnClose();
+        super.onStop();
+
     }
 
     private void saveOnClose() {
         sPref = getPreferences(MODE_PRIVATE);
         SharedPreferences.Editor editor = sPref.edit();
-        editor.putString("myShops", processedMyShopList.toString());//todo: заменить строковые значения на финал стринг TAG
-        editor.putString("mailList", processedMailList.toString());
-        editor.putString("result", lResult.toString());
+        editor.putString(TAG_shopList, processedMyShopList.toString());//todo: заменить строковые значения на финал стринг TAG
+        editor.putString(TAG_mailList, processedMailList.toString());
+        editor.putString(TAG_result, lResult.toString());
+        editor.apply();
     }
 
     private Map<String, ?> loadOnStart() {
@@ -139,15 +141,29 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
             for (Map.Entry<String, ?> entry : map.entrySet()) {
                 String key = entry.getKey();
+                String tmp;
                 switch (key) {
-                    case "myShops":
-                        ArrayList arrayList = new ArrayList(Arrays.asList(entry.getValue()));
-                        processedMyShopList = new ArrayList<>(arrayList);
-                        //TODO: impplement восстановление данных
+                    case TAG_shopList:
+                        tmp = (String) entry.getValue();
+                        processedMyShopList = new ArrayList(Arrays.asList(removeBrecket(tmp)));
+                    case TAG_mailList:
+                        tmp = (String) entry.getValue();
+                        processedMailList = new ArrayList(Arrays.asList(removeBrecket(tmp)));
+                    case TAG_result:
+                        tmp = (String) entry.getValue();
+                        lResult = new ArrayList(Arrays.asList(removeBrecket(tmp)));
+
                 }
             }
         }
 
 
+    }
+
+    private String[] removeBrecket(String str) {
+        str.replaceAll("\\[", "");
+        str.replaceAll("\\]", "");
+        String[] tmpMass = str.split(",");
+        return tmpMass;
     }
 }

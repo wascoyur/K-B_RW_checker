@@ -51,7 +51,6 @@ public class DataFinder extends Activity implements View.OnClickListener{
         String s = (et.getText().toString());
 ////////tmp
         if (s == null | s.isEmpty()) {
-
             s = tmpDataReader();
         }
 //////////tmp
@@ -64,7 +63,7 @@ public class DataFinder extends Activity implements View.OnClickListener{
 //                tmp.replaceAll(",", "");
                 ls.add(Integer.parseInt(tmp));
             } catch (Exception e) {
-
+                e.printStackTrace();
             }
         }
          ArrayList<Integer> list = new ArrayList<>(ls);
