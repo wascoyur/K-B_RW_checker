@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.ArraySet;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -13,15 +12,12 @@ import android.widget.ListView;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 public class MainActivity extends Activity implements View.OnClickListener {
 
     ListView lsMyShopList, lsMailList, lsResult;
-    Button btnEnterData, btnProc, btnClear, btnSave;
+    Button btnEnterData, btnProc, btnLoad, btnSave;
     ArrayList processedMyShopList= new ArrayList<>();
     ArrayList processedMailList = new ArrayList<>();
     ArrayList lResult = new ArrayList<>();
@@ -29,6 +25,10 @@ public class MainActivity extends Activity implements View.OnClickListener {
     private final String TAG_shopList = "myShops";
     private final String TAG_mailList = "mailList";
     private final String TAG_result = "result";
+
+    ArrayAdapter<Integer> adapterMyShoplist;
+    ArrayAdapter<Integer> adapterMailList;
+    ArrayAdapter<Integer> adapterResult;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,11 +39,9 @@ public class MainActivity extends Activity implements View.OnClickListener {
         lsResult = findViewById(R.id.lsCoicidence);
         btnEnterData = findViewById(R.id.btnEnterData);
         btnProc = findViewById(R.id.btnProcessData);
-        btnClear = findViewById(R.id.btnClearAll);
+        btnLoad = findViewById(R.id.btnLoad);
         btnSave = findViewById(R.id.btnSave);
-        if (loadOnStart() != null && !loadOnStart().isEmpty()) {
-            checkSavedData(loadOnStart());
-        }
+
 
 ////////////////TMP Debug
  //       List<Integer> tmpMyShops = new ArrayList<Integer>( Arrays.asList(575,824,875,1144,1193,1362,1363,1622,1753,1837,2058,2302,2365,2417,2541,2542,4281,1838,4826));
@@ -51,14 +49,16 @@ public class MainActivity extends Activity implements View.OnClickListener {
 //        processedMyShopList = (ArrayList<Integer>) tmpMyShops;
 //        processedMailList = (ArrayList<Integer>) tmpMailList;
 ////////////////TMP Debug
-        ArrayAdapter<Integer> adapter = new ArrayAdapter<Integer>(this, android.R.layout.simple_list_item_1, processedMyShopList);
-        ArrayAdapter<Integer> adapter2 = new ArrayAdapter<Integer>(this, android.R.layout.simple_list_item_1, processedMailList);
-        ArrayAdapter<Integer> adapter3 = new ArrayAdapter<Integer>(this, android.R.layout.simple_list_item_1, lResult);
-        lsMyShopList.setAdapter(adapter);
-        lsMailList.setAdapter(adapter2);
-        lsResult.setAdapter(adapter3);
+        adapterMyShoplist = new ArrayAdapter<Integer>(this, android.R.layout.simple_list_item_1, processedMyShopList);
+        adapterMailList = new ArrayAdapter<Integer>(this, android.R.layout.simple_list_item_1, processedMailList);
+        adapterResult = new ArrayAdapter<Integer>(this, android.R.layout.simple_list_item_1, lResult);
+        lsMyShopList.setAdapter(adapterMyShoplist);
+        lsMailList.setAdapter(adapterMailList);
+        lsResult.setAdapter(adapterResult);
         btnEnterData.setOnClickListener(this);
         btnProc.setOnClickListener(this);
+        btnSave.setOnClickListener(this);
+        btnLoad.setOnClickListener(this);
 //        Intent dataFinder = new Intent(MainActivity.this, DataFinder.class);
 //            startActivity(dataFinder);
     }
@@ -77,14 +77,13 @@ public class MainActivity extends Activity implements View.OnClickListener {
 //                parser.putIntegerArrayListExtra("lResult",lResult);
                 startActivityForResult(parser, 1);
                 break;
-//            case R.id.btnEnterData:
-//                Intent dataFinder = new Intent(this, DataFinder.class);
-//                startActivityForResult(dataFinder, 1);
-//                break;
-//            case R.id.btnEnterData:
-//                Intent dataFinder = new Intent(this, DataFinder.class);
-//                startActivityForResult(dataFinder, 1);
-//                break;
+            case R.id.btnSave:
+                saveOnClose();
+                break;
+            case R.id.btnLoad:
+
+                recoveryData(loadOnStart());
+                break;
         }
     }
 
@@ -114,13 +113,6 @@ public class MainActivity extends Activity implements View.OnClickListener {
         }
     }
 
-    @Override
-    protected void onStop() {
-        saveOnClose();
-        super.onStop();
-
-    }
-
     private void saveOnClose() {
         sPref = getPreferences(MODE_PRIVATE);
         SharedPreferences.Editor editor = sPref.edit();
@@ -136,7 +128,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
         return saved;
     }
 
-    private void checkSavedData(Map<String, ?> map) {
+    private void recoveryData(Map<String, ?> map) {
         if (map != null && (!map.isEmpty())) {
 
             for (Map.Entry<String, ?> entry : map.entrySet()) {
@@ -145,13 +137,16 @@ public class MainActivity extends Activity implements View.OnClickListener {
                 switch (key) {
                     case TAG_shopList:
                         tmp = (String) entry.getValue();
-                        processedMyShopList = new ArrayList(Arrays.asList(removeBrecket(tmp)));
+                        processedMyShopList = removeBrecket(tmp);
+                        break;
                     case TAG_mailList:
                         tmp = (String) entry.getValue();
-                        processedMailList = new ArrayList(Arrays.asList(removeBrecket(tmp)));
+                        processedMailList = removeBrecket(tmp);
+                        break;
                     case TAG_result:
                         tmp = (String) entry.getValue();
-                        lResult = new ArrayList(Arrays.asList(removeBrecket(tmp)));
+                        lResult = removeBrecket(tmp);
+                        break;
 
                 }
             }
@@ -160,10 +155,18 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
     }
 
-    private String[] removeBrecket(String str) {
-        str.replaceAll("\\[", "");
-        str.replaceAll("\\]", "");
-        String[] tmpMass = str.split(",");
-        return tmpMass;
+    private ArrayList<Integer> removeBrecket(String str) {
+        ArrayList<Integer> mass = new ArrayList<>();
+        String[] tmp = str.split(",");
+        for (String entry : tmp) {
+            entry = entry.replaceAll("\\D", "");
+            Integer integer = Integer.parseInt(entry);
+            mass.add(integer);
+        }
+        return mass;
+    }
+
+    private void refreshLists() {
+        ada
     }
 }
