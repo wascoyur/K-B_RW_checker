@@ -22,13 +22,14 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
     ListView lsMyShopList, lsMailList, lsResult;
     Button btnEnterData, btnProc, btnClear, btnSave;
-    ArrayList processedMyShopList= new ArrayList<>();
-    ArrayList processedMailList = new ArrayList<>();
-    ArrayList lResult = new ArrayList<>();
+    ArrayList <Integer> processedMyShopList= new ArrayList<>();
+    ArrayList <Integer> processedMailList = new ArrayList<>();
+    ArrayList <Integer> lResult = new ArrayList<>();
     SharedPreferences sPref;
-    private final String TAG_shopList = "myShops";
-    private final String TAG_mailList = "mailList";
-    private final String TAG_result = "result";
+    static final String TAG_shopList = "myShops";
+    static final String TAG_mailList = "mailList";
+    static final String TAG_result = "result";
+    IOclass saver = new IOclass();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -145,13 +146,16 @@ public class MainActivity extends Activity implements View.OnClickListener {
                 switch (key) {
                     case TAG_shopList:
                         tmp = (String) entry.getValue();
-                        processedMyShopList = new ArrayList(Arrays.asList(removeBrecket(tmp)));
+                        processedMyShopList = removeBrecket(tmp);
+                        break;
                     case TAG_mailList:
                         tmp = (String) entry.getValue();
-                        processedMailList = new ArrayList(Arrays.asList(removeBrecket(tmp)));
+                        processedMailList = removeBrecket(tmp);
+                        break;
                     case TAG_result:
                         tmp = (String) entry.getValue();
-                        lResult = new ArrayList(Arrays.asList(removeBrecket(tmp)));
+                        lResult = removeBrecket(tmp);
+                        break;
 
                 }
             }
@@ -160,10 +164,14 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
     }
 
-    private String[] removeBrecket(String str) {
-        str.replaceAll("\\[", "");
-        str.replaceAll("\\]", "");
-        String[] tmpMass = str.split(",");
-        return tmpMass;
+    private ArrayList<Integer> removeBrecket(String str) {
+        ArrayList<Integer> mass = new ArrayList<>();
+        String[] tmp = str.split(",");
+        for (String entry : tmp) {
+            entry = entry.replaceAll("\\D", "");
+            Integer integer = Integer.parseInt(entry);
+            mass.add(integer);
+        }
+        return mass;
     }
 }

@@ -49,13 +49,9 @@ public class DataFinder extends Activity implements View.OnClickListener{
 
     ArrayList<Integer> loadList(EditText et, HashSet<Integer> ls) {
         String s = (et.getText().toString());
-////////tmp
-        if (s == null | s.isEmpty()) {
-            s = tmpDataReader();
-        }
-//////////tmp
+
         s = s + ",";
-        Pattern pattern = Pattern.compile("\\d{1,4}(,|(\\r\\n))");
+        Pattern pattern = Pattern.compile("\\d{1,4}(,|(\\r\\n)) |\\s");
         Matcher matcher = pattern.matcher(s);
         while (matcher.find()) {
             try {
@@ -98,24 +94,6 @@ public class DataFinder extends Activity implements View.OnClickListener{
         super.finish();
     }
 
-    String tmpDataReader() {
-        ArrayList<String> s = new ArrayList<>();
-        String sd = android.os.Environment.getExternalStorageState();
-        File sdDir = android.os.Environment.getExternalStorageDirectory();
-        File filePath = new File(sdDir.getAbsolutePath() + "/download/");
-        File sdFile = new File(filePath, "InboxMail.txt");
-        try {
-            BufferedReader bufferedReader = new BufferedReader(new FileReader(sdFile));
-            String t ;
-                while ((t = bufferedReader.readLine()) != null) {
-                    t = t + ",";
-                    s.add(t);
-                }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
 
-        return s.toString();
-    }
 }
 
