@@ -6,4 +6,5 @@
     <string name="Parent"></string>
     <string name="clear_variables">Load previous data</string>
     <string name="save_result">Save</string>
+    <string name="instruction">Для загрузки списка из файла, файл должен находится  SD карте в корне, его имя должно быть 1111.txt. </string>
 </resources>
