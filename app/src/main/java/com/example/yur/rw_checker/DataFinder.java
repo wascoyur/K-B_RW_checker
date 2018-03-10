@@ -55,11 +55,12 @@ public class DataFinder extends Activity implements View.OnClickListener{
         }
 //////////tmp
         s = s + ",";
-        Pattern pattern = Pattern.compile("\\d{1,4}(,|(\\r\\n))");
+        Pattern pattern = Pattern.compile("(,|(\\r\\n)|(\\s))(\\d{1,4})(,|(\\r\\n))|(\\s)");
         Matcher matcher = pattern.matcher(s);
         while (matcher.find()) {
             try {
-                String tmp = s.substring(matcher.start(), matcher.end()).replaceAll("\\D", "");
+//                s = s.replaceAll("\\D", "");
+                String tmp = s.substring(matcher.start(), matcher.end());
 //                tmp.replaceAll(",", "");
                 ls.add(Integer.parseInt(tmp));
             } catch (Exception e) {

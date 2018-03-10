@@ -45,9 +45,8 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
 ////////////////TMP Debug
  //       List<Integer> tmpMyShops = new ArrayList<Integer>( Arrays.asList(575,824,875,1144,1193,1362,1363,1622,1753,1837,2058,2302,2365,2417,2541,2542,4281,1838,4826));
-//        List<Integer> tmpMailList = new ArrayList<Integer>(Arrays.asList(575,8, 19, 20, 23, 24, 26, 37, 39, 41, 49, 51, 58, 61, 65, 79, 80, 81, 82, 88, 89, 95, 101, 107, 111, 117, 118, 131, 133, 143, 148, 151, 157, 159, 174, 175, 187, 190, 191, 198, 203, 204, 205, 222, 224, 227, 241, 242, 250, 258, 262, 272, 276, 277, 282, 284, 287, 293, 296, 297, 302, 304, 312, 313, 318, 321, 323, 325, 332, 335, 349, 352, 353, 354, 355, 357, 359, 363, 364, 370, 373, 377, 378, 381, 383, 387, 410, 412, 418, 419, 439, 443, 449, 451, 452, 464, 465, 484, 487, 495, 502, 504, 505, 506, 511, 523, 538, 547, 548, 553, 555, 563, 576, 577, 578, 590, 592, 593, 597, 599, 600, 606, 617, 620, 621, 629, 638, 639, 640, 641, 646, 651, 652, 653, 655, 658, 662, 668, 671, 683, 684, 688, 689, 690, 692, 695, 696, 698, 702,824));
-//        processedMyShopList = (ArrayList<Integer>) tmpMyShops;
-//        processedMailList = (ArrayList<Integer>) tmpMailList;
+//        List<Integer> tmpMailList = new ArrayList<Integer>(Arrays.asList(575,8, 19, 20, 23, 24, 26, 37, 39, 41, 49, 51, 58, 61, 65, 79, 80, 81, 82, 88, 89, 95, 101, 107, 111, 117, 118, 131, 133, 143, 148, 151, 157, 159, 174, 175, 187, 190, 191, 198, 203, 204, 205, 222, 224, 227, 241, 242, 250, 258, 262, 272, 276, 277, 282, 284, 287, 293, 296, 297, 302, 304, 312, 313, 318, 321, 323, 325, 332, 335, 349, 352, 353, 354, 355, 357, 359, 363, 364, 370, 373, 377, 378, 381, 383, 387, 410, 412, 418, 419, 439, 443, 449, 451, 452, 464, 465, 484, 487, 495, 502, 504, 505, 506, 511, 523, 538, 547, 548, 553, 555, 563, 576, 577, 578, 590, 592, 593, 597, 599, 600, 606, 617, 620, 621, 629, 638, 639, 640, 641, 646, 651, 652, 653, 655, 658, 662, 668, 671, 683, 684, 688, 689, 690, 692, 695, 696, 698, 702, 824, ));
+
 ////////////////TMP Debug
         adapterMyShoplist = new ArrayAdapter<Integer>(this, android.R.layout.simple_list_item_1, processedMyShopList);
         adapterMailList = new ArrayAdapter<Integer>(this, android.R.layout.simple_list_item_1, processedMailList);
@@ -69,20 +68,21 @@ public class MainActivity extends Activity implements View.OnClickListener {
             case R.id.btnEnterData:
                 Intent dataFinder = new Intent(this, DataFinder.class);
                 startActivityForResult(dataFinder, 1);
+                refreshLists();
                 break;
             case R.id.btnProcessData:
                 Intent parser = new Intent(this, Parser.class);
                 parser.putIntegerArrayListExtra("myList",processedMyShopList);//todo: заменить строковые значения на финал стринг переменные TAG
                 parser.putIntegerArrayListExtra("inboxList",processedMailList);
-//                parser.putIntegerArrayListExtra("lResult",lResult);
                 startActivityForResult(parser, 1);
+                refreshLists();
                 break;
             case R.id.btnSave:
                 saveOnClose();
                 break;
             case R.id.btnLoad:
-
                 recoveryData(loadOnStart());
+                refreshLists();
                 break;
         }
     }
@@ -160,13 +160,28 @@ public class MainActivity extends Activity implements View.OnClickListener {
         String[] tmp = str.split(",");
         for (String entry : tmp) {
             entry = entry.replaceAll("\\D", "");
-            Integer integer = Integer.parseInt(entry);
-            mass.add(integer);
+            try {
+                Integer integer = Integer.parseInt(entry);
+                mass.add(integer);
+            } catch (NumberFormatException e) {
+                e.printStackTrace();
+            }
+
         }
         return mass;
     }
 
-    private void refreshLists() {
-        ada
+     void refreshLists() {
+        adapterMyShoplist.clear();
+        adapterMyShoplist.addAll(processedMyShopList);
+        adapterMyShoplist.notifyDataSetChanged();
+
+        adapterMailList.clear();
+        adapterMailList.addAll(processedMailList);
+        adapterMailList.notifyDataSetChanged();
+
+        adapterResult.clear();
+        adapterResult.addAll(lResult);
+        adapterResult.notifyDataSetChanged();
     }
 }
