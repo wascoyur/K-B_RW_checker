@@ -116,7 +116,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
     private void saveOnClose() {
         sPref = getPreferences(MODE_PRIVATE);
         SharedPreferences.Editor editor = sPref.edit();
-        editor.putString(TAG_shopList, processedMyShopList.toString());//todo: заменить строковые значения на финал стринг TAG
+        editor.putString(TAG_shopList, processedMyShopList.toString());
         editor.putString(TAG_mailList, processedMailList.toString());
         editor.putString(TAG_result, lResult.toString());
         editor.apply();

@@ -19,31 +19,35 @@
         <Button
             android:id="@+id/btnEnterData"
             style="@style/Widget.AppCompat.Button.Colored"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="Enter Data" />
+            android:text="@string/enter_data"
+            android:textSize="10sp" />
 
         <Button
             android:id="@+id/btnProcessData"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="Process Data" />
+            android:text="@string/process_data"
+            android:textSize="10sp" />
 
         <Button
             android:id="@+id/btnLoad"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:text="@string/clear_variables" />
+            android:layout_weight="2"
+            android:text="@string/clear_variables"
+            android:textSize="10sp" />
 
         <Button
             android:id="@+id/btnSave"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="@string/save_result" />
+            android:text="@string/save_result"
+            android:textSize="10sp" />
     </LinearLayout>
 
     <LinearLayout
@@ -61,7 +65,9 @@
             android:id="@+id/lsMyShops"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1" />
+            android:layout_weight="1" >
+
+        </ListView>
 
         <ListView
             android:id="@+id/lsMailShops"
