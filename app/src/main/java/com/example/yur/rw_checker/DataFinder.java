@@ -126,6 +126,7 @@ public class DataFinder extends Activity implements View.OnClickListener{
                     t = t + ",";
                     s.add(t);
                 }
+                bufferedReader.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
