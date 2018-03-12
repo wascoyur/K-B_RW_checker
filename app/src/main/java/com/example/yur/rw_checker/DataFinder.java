@@ -56,7 +56,7 @@ public class DataFinder extends Activity implements View.OnClickListener{
     ArrayList<Integer> loadList(EditText et, HashSet<Integer> ls) {
         String s = (et.getText().toString());
 ////////tmp
-        if (s == null | s.isEmpty()) {
+        if (s == null) {
             s = tmpDataReader();
         }
 //////////tmp
@@ -70,6 +70,7 @@ public class DataFinder extends Activity implements View.OnClickListener{
                 ls.add(Integer.parseInt(tmp));
             } catch (Exception e) {
                 e.printStackTrace();
+
             }
         }
          ArrayList<Integer> list = new ArrayList<>(ls);
@@ -81,6 +82,7 @@ public class DataFinder extends Activity implements View.OnClickListener{
 
         switch (v.getId()) {
             case R.id.btnLoadMyShops:
+                myShopList.clear();
                 myShopList = loadList(etMyShoplistInbox, rowMyShop);
                 MessageToUser("Your Shops is loaded");
                 Collections.sort(myShopList);
@@ -90,6 +92,7 @@ public class DataFinder extends Activity implements View.OnClickListener{
                 etMyShoplistInbox.setText(null);
                 break;
             case R.id.btnLoadMailList:
+                mailList.clear();
                 mailList = loadList(etMailList,  rowMailList);
                 MessageToUser("List from mail is loaded");
                 Collections.sort(mailList);
@@ -129,6 +132,7 @@ public class DataFinder extends Activity implements View.OnClickListener{
                 bufferedReader.close();
         } catch (IOException e) {
             e.printStackTrace();
+
         }
 
         return s.toString();
