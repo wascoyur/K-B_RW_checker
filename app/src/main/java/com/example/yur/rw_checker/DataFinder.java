@@ -1,7 +1,14 @@
 package com.example.yur.rw_checker;
+import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -32,9 +39,9 @@ public class DataFinder extends Activity implements View.OnClickListener{
     HashSet<Integer> rowMyShop;
     HashSet<Integer> rowMailList;
     HashSet<Integer> tmp;
-    ArrayList<Integer> myShopList;
-    ArrayList<Integer> mailList;
-    String reGex = "(\"(\\\\b)(\\\\d{1,4})((\\\\p{Punct})|(\\\\s))\")";
+    ArrayList<Integer> myShopList = new ArrayList<>();
+    ArrayList<Integer> mailList = new ArrayList<>();
+    private static final int PERMISSION_REQUEST_CODE = 123;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,12 +58,16 @@ public class DataFinder extends Activity implements View.OnClickListener{
         btnProcessMyShopInbox.setOnClickListener(this);
         btnProcessMailList.setOnClickListener(this);
 
+        if (!haspermissions()) {
+            requestPermissionWithRationale();
+        }
+
     }
 
     ArrayList<Integer> loadList(EditText et, HashSet<Integer> ls) {
         String s = (et.getText().toString());
 ////////tmp
-        if (s == null) {
+        if (s == null| s.isEmpty()) {
             s = tmpDataReader();
         }
 //////////tmp
@@ -118,8 +129,12 @@ public class DataFinder extends Activity implements View.OnClickListener{
 
     String tmpDataReader() {
         ArrayList<String> s = new ArrayList<>();
-        String sd = android.os.Environment.getExternalStorageState();
-        File sdDir = android.os.Environment.getExternalStorageDirectory();
+        File sdDir = null;// = android.os.Environment.getExternalStorageDirectory();
+
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
+            == PackageManager.PERMISSION_GRANTED) {
+            sdDir = android.os.Environment.getExternalStorageDirectory();
+        }
         File filePath = new File(sdDir.getAbsolutePath());
         File sdFile = new File(filePath, "1111.txt");
         try {
@@ -136,6 +151,62 @@ public class DataFinder extends Activity implements View.OnClickListener{
         }
 
         return s.toString();
+    }
+
+    public void requestMultiplePermissions(String permission, int requestCode){
+        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission
+            .READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, requestCode);
+    }
+
+    private boolean haspermissions() {
+        int res = PackageManager.PERMISSION_GRANTED;
+        String[] permissions = new String[] { Manifest.permission.WRITE_EXTERNAL_STORAGE };
+        for (String perms : permissions) {
+            res = checkCallingOrSelfPermission(perms);
+            if (!(res == PackageManager.PERMISSION_GRANTED)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    @Override public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+        @NonNull int[] grantResults) {
+
+        boolean allowed = true;
+
+        switch (requestCode) {
+            case PERMISSION_REQUEST_CODE:
+                for (int res : grantResults) {
+                    allowed = allowed && (res == PackageManager.PERMISSION_GRANTED);
+                }
+                break;
+            default:
+                allowed = false;
+                break;
+        }
+        //super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    }
+
+    public void requestPermissionWithRationale() {
+        if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+            Manifest.permission.READ_EXTERNAL_STORAGE)) {
+            final String msg = "Storage permission is needed to show files count";
+
+            Snackbar.make(DataFinder.this.findViewById(R.id.clDataFind), msg, Snackbar
+                .LENGTH_LONG).setAction("Grant", new View.OnClickListener() {
+                @Override public void onClick(View v) {
+                    requestPerms();
+                }
+            }).show();
+        }
+    }
+
+    private void requestPerms() {
+        String[] permissions = new String[] { Manifest.permission.WRITE_EXTERNAL_STORAGE };
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+            requestPermissions(permissions, PERMISSION_REQUEST_CODE);
+        }
     }
 }
 

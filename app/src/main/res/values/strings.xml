@@ -9,4 +9,5 @@
     <string name="instruction">Для загрузки списка из файла, файл должен находится  SD карте в корне, его имя должно быть 1111.txt. </string>
     <string name="enter_data">Ввести данные</string>
     <string name="process_data">Обработать данные</string>
+    <string name="need">Storage permission is needed to show files count</string>
 </resources>
