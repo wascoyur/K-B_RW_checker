@@ -36,8 +36,8 @@ public class DataFinder extends Activity implements View.OnClickListener{
     Button btnProcessMyShopInbox, btnProcessMailList;
     TextView tvShops, tvMaillist;
     StringBuilder sb;
-    HashSet<Integer> rowMyShop;
-    HashSet<Integer> rowMailList;
+    HashSet<Integer> rowMyShop = new HashSet<>();
+    HashSet<Integer> rowMailList = new HashSet<>();
     HashSet<Integer> tmp;
     ArrayList<Integer> myShopList = new ArrayList<>();
     ArrayList<Integer> mailList = new ArrayList<>();
@@ -58,14 +58,12 @@ public class DataFinder extends Activity implements View.OnClickListener{
         btnProcessMyShopInbox.setOnClickListener(this);
         btnProcessMailList.setOnClickListener(this);
 
-        if (!haspermissions()) {
-            requestPermissionWithRationale();
-        }
 
     }
 
     ArrayList<Integer> loadList(EditText et, HashSet<Integer> ls) {
         String s = (et.getText().toString());
+        ls.clear();
 ////////tmp
         if (s == null| s.isEmpty()) {
             s = tmpDataReader();
@@ -94,6 +92,7 @@ public class DataFinder extends Activity implements View.OnClickListener{
         switch (v.getId()) {
             case R.id.btnLoadMyShops:
                 myShopList.clear();
+                rowMailList.clear();
                 myShopList = loadList(etMyShoplistInbox, rowMyShop);
                 MessageToUser("Your Shops is loaded");
                 Collections.sort(myShopList);
@@ -104,6 +103,7 @@ public class DataFinder extends Activity implements View.OnClickListener{
                 break;
             case R.id.btnLoadMailList:
                 mailList.clear();
+                rowMailList.clear();
                 mailList = loadList(etMailList,  rowMailList);
                 MessageToUser("List from mail is loaded");
                 Collections.sort(mailList);
@@ -128,12 +128,19 @@ public class DataFinder extends Activity implements View.OnClickListener{
     }
 
     String tmpDataReader() {
+
+        if (!haspermissions()) {
+            requestPermissionWithRationale();
+        }
+
         ArrayList<String> s = new ArrayList<>();
         File sdDir = null;// = android.os.Environment.getExternalStorageDirectory();
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
             == PackageManager.PERMISSION_GRANTED) {
             sdDir = android.os.Environment.getExternalStorageDirectory();
+        } else {
+            return null;
         }
         File filePath = new File(sdDir.getAbsolutePath());
         File sdFile = new File(filePath, "1111.txt");
@@ -189,16 +196,19 @@ public class DataFinder extends Activity implements View.OnClickListener{
     }
 
     public void requestPermissionWithRationale() {
-        if (ActivityCompat.shouldShowRequestPermissionRationale(this,
-            Manifest.permission.READ_EXTERNAL_STORAGE)) {
+        boolean b = ActivityCompat.shouldShowRequestPermissionRationale(this,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        if (b) {
             final String msg = "Storage permission is needed to show files count";
 
-            Snackbar.make(DataFinder.this.findViewById(R.id.clDataFind), msg, Snackbar
+            Snackbar.make(DataFinder.this.findViewById(R.id.llMyShops), msg, Snackbar
                 .LENGTH_LONG).setAction("Grant", new View.OnClickListener() {
                 @Override public void onClick(View v) {
                     requestPerms();
                 }
             }).show();
+        } else {
+            requestPerms();
         }
     }
 

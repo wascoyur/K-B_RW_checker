@@ -113,17 +113,8 @@ public class MainActivity extends Activity implements View.OnClickListener {
         }
     }
 
-  @Override
-  protected void onPause() {
-    super.onPause();
-    saveOnClose();
-  }
 
-  @Override protected void onStart() {
-    super.onStart();
-    recoveryData(loadOnStart());
-    refreshLists();
-  }
+
 
   private void saveOnClose() {
         sPref = getPreferences(MODE_PRIVATE);
