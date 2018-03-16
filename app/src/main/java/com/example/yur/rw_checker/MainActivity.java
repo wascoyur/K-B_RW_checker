@@ -97,13 +97,13 @@ public class MainActivity extends Activity implements View.OnClickListener {
                 lsResult.setAdapter(adapterResult);
             }
 
-            if (data.getIntegerArrayListExtra("mailList") != null) {
+            if ((data.getIntegerArrayListExtra("mailList") != null) && !(data.getIntegerArrayListExtra("mailList").isEmpty())) {
                 processedMailList = data.getIntegerArrayListExtra("mailList");
                 Collections.sort(processedMailList);
                 ArrayAdapter<Integer> adapterMailList = new ArrayAdapter<Integer>(this, android.R.layout.simple_list_item_1, processedMailList);
                 lsMailList.setAdapter(adapterMailList);
             }
-            if (data.getIntegerArrayListExtra("myShopList") != null) {
+            if ((data.getIntegerArrayListExtra("myShopList") != null) && !(data.getIntegerArrayListExtra("myShopList").isEmpty())) {
                 processedMyShopList = data.getIntegerArrayListExtra("myShopList");
                 Collections.sort(processedMyShopList);
                 ArrayAdapter<Integer> adapterMyShops = new ArrayAdapter<Integer>(this, android.R.layout.simple_list_item_1, processedMyShopList);
