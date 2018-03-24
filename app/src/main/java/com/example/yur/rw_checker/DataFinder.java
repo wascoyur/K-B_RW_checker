@@ -17,12 +17,8 @@ import android.widget.Toast;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -199,7 +195,7 @@ public class DataFinder extends Activity implements View.OnClickListener{
         boolean b = ActivityCompat.shouldShowRequestPermissionRationale(this,
             Manifest.permission.WRITE_EXTERNAL_STORAGE);
         if (b) {
-            final String msg = "Storage permission is needed to show files count";
+            final String msg = "Storage permission is needed to download list from SD";
 
             Snackbar.make(DataFinder.this.findViewById(R.id.llMyShops), msg, Snackbar
                 .LENGTH_LONG).setAction("Grant", new View.OnClickListener() {
